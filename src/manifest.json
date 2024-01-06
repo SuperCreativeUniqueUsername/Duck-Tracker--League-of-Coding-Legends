@@ -20,7 +20,8 @@
             "16": "images/duckwclock.png",
             "48": "images/duckwclock.png",
             "128": "images/duckwclock.png"
-        }
+        },
+        "default_popup": "popup.html"
     },
     "icons": {
         "16": "images/duckwclock.png",
