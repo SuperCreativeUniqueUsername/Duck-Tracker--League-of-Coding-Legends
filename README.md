@@ -1,1 +1,1 @@
-### Duck Time Extention
+### Duck Time Tracking Google Chrome Extension
