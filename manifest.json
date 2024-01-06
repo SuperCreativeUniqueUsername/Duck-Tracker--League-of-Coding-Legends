@@ -2,5 +2,13 @@
     "manifest_version": 2,
     "name": "Duck Tracker",
     "version": "0.0.1",
-    "description": "Motivates you to spend less time online with a threatening duck"
+    "description": "Motivates you to spend less time online with a threatening duck",
+    "content_scritps": [
+        {
+            "matches":[
+                "<all_urls>"
+            ],
+            "js": "content.js"
+        }
+    ]
 }
