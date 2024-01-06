@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Duck Tracker",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Motivates you to spend less time online with a threatening duck",
     "permissions": ["activeTab", "storage"],
     "background": {
@@ -20,8 +20,7 @@
             "16": "images/duckwclock.png",
             "48": "images/duckwclock.png",
             "128": "images/duckwclock.png"
-        },
-        "default_popup": "popup.html"
+        }
     },
     "icons": {
         "16": "images/duckwclock.png",
