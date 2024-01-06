@@ -12,7 +12,7 @@
             "matches": [
                 "<all_urls>"
             ],
-            "js": ["content.js"]
+            "js": ["scripts/content.js"]
         }
     ],
     "action": {
@@ -21,7 +21,7 @@
             "48": "images/duckwclock.png",
             "128": "images/duckwclock.png"
         },
-        "default_popup": "popup.html"
+        "default_popup": "popup/popup.html"
     },
     "icons": {
         "16": "images/duckwclock.png",
