@@ -3,19 +3,22 @@
     "name": "Duck Tracker",
     "version": "0.0.1",
     "description": "Motivates you to spend less time online with a threatening duck",
+    "background": {
+        "service_worker": "background.js"
+    },
     "content_scripts": [
         {
-            "matches":[
+            "matches": [
                 "<all_urls>"
             ],
             "js": ["content.js"]
         }
     ],
-    "background": {
-        "scripts": ["background.js"]
-    },
-    "browser_action":{
-        "default_icon": "content/duckwclock.png"
+    "action": {
+        "default_icon": {
+            "16": "duckwclock.png",
+            "48": "duckwclock.png",
+            "128": "duckwclock.png"
+        }
     }
-
 }
