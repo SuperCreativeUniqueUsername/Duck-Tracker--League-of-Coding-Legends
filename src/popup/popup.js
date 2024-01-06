@@ -23,6 +23,16 @@ function displayTrackedTime() {
     });
   }
   
+  function resetTrackedTime() {
+    chrome.storage.local.set({ trackedSites: {} }, () => {
+      console.log('Tracked time reset.');
+      displayTrackedTime();
+    });
+  }
+  
   // Display tracked time when the popup is opened
   displayTrackedTime();
+  
+  // Add event listener for the reset button
+  document.getElementById('reset-button').addEventListener('click', resetTrackedTime);
   
