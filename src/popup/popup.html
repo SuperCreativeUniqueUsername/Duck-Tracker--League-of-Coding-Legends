@@ -1,13 +1,32 @@
-<!-- popup.html -->
-
 <!DOCTYPE html>
 <html>
 <head>
   <title>Time Tracker</title>
+  <style>
+    body {
+      width: 300px; /* Set the desired width */
+      height: 400px; /* Set the desired height */
+      overflow-y: auto; /* Enable vertical scrolling if needed */
+      margin: 0;
+      padding: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
 </head>
 <body>
   <h1>Time Tracker</h1>
-  <ul id="tracked-sites"></ul>
+  <table id="tracked-sites"></table>
   <button id="reset-button">Reset</button>
 
   <script src="popup.js"></script>

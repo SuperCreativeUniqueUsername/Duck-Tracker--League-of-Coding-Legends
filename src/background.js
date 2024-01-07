@@ -1,5 +1,3 @@
-// background.js
-
 function trackTime(tabId, url) {
     const currentTime = new Date().getTime();
     const currentDate = new Date().toLocaleDateString();
@@ -24,20 +22,19 @@ function trackTime(tabId, url) {
       });
     });
   }
-  
-  chrome.tabs.onActivated.addListener((activeInfo) => {
+
+chrome.tabs.onActivated.addListener((activeInfo) => {
     const { tabId, windowId } = activeInfo;
     chrome.tabs.get(tabId, (tab) => {
-      if (tab.windowId === windowId) {
-        trackTime(tab.id, tab.url);
-      }
+        if (tab.windowId === windowId) {
+            trackTime(tab.id, tab.url);
+        }
     });
-  });
-  
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.url) {
-      console.log('URL updated:', changeInfo.url);
-      trackTime(tabId, changeInfo.url);
+        console.log('URL updated:', changeInfo.url);
+        trackTime(tabId, changeInfo.url);
     }
-  });
-  
+});
