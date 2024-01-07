@@ -1,48 +1,68 @@
-// popup.js
-
 function displayTrackedTime() {
-    chrome.storage.local.get({ trackedSites: {} }, (result) => {
-        const trackedSites = result.trackedSites || {};
-        const trackedSitesTable = document.getElementById('tracked-sites');
-        const currentDate = new Date().toLocaleDateString();
-        // Clear the existing table
-        trackedSitesTable.innerHTML = '';
+chrome.storage.local.get({ trackedSites: {} }, (result) => {
+    const trackedSites = result.trackedSites || {};
+    const currentDate = new Date().toLocaleDateString();
 
-        // Create table header
-        const tableHeader = document.createElement('tr');
-        tableHeader.innerHTML = '<th>URL</th><th>Time Spent (minutes)</th>';
-        trackedSitesTable.appendChild(tableHeader);
+    // Create a map to store the accumulated times for each unique name
+    const nameSumMap = {};
 
-        // Display tracked time for each site in the table
-        if (Object.keys(trackedSites).length === 0) {
-            const noDataRow = document.createElement('tr');
-            noDataRow.innerHTML = '<td colspan="3">No tracked sites yet.</td>';
-            trackedSitesTable.appendChild(noDataRow);
-        } else {
-            for (const [url, data] of Object.entries(trackedSites)) {
-                console.log(data[currentDate])
-                const tableRow = document.createElement('tr');
+    // Iterate through tracked sites and accumulate times
+    for (const [url, data] of Object.entries(trackedSites)) {
+    const name = (url.split('/')[2] || 'random'); // Extracting the hostname, you might need to adjust this
 
-                // Extract the hostname from the URL for the sitelogo (you may need to customize this)
-                const URL = document.createElement('td');
-                URL.textContent = url.split('/')[2]; // Extracting the hostname, you might need to adjust this
+    const totalTimeMinutes = (data[currentDate]?.totalTime || 0) / (1000 * 60);
 
-                const timeSpent = document.createElement('td');
-                console.log('data.totalTime:', data[currentDate].totalTime);
-                const totalTimeMinutes = (data[currentDate].totalTime/(60*1000)).toFixed(2)
-                console.log('totalTimeMinutes:', totalTimeMinutes);
+    // Check if the name already exists in the map
+    if (nameSumMap.hasOwnProperty(name)) {
+        // If the name exists, add the minutes to the existing sum
+        nameSumMap[name].totalMinutes += totalTimeMinutes;
+    } else {
+        // If the name is not in the map, initialize the sum
+        nameSumMap[name] = {
+        totalMinutes: totalTimeMinutes,
+        maxMinutes: data[currentDate]?.maxMinutes || 0,
+        };
+    }
+    }
 
-                timeSpent.textContent = `${totalTimeMinutes} minutes`;
+    // Create a new table with no duplicate names and summed times
+    const newTable = document.createElement('table');
+    const headerRow = newTable.createTHead().insertRow(0);
+    headerRow.innerHTML = '<th>Name</th><th>Sum of Minutes</th><th>Set Max</th>';
 
-                tableRow.appendChild(URL);
-                tableRow.appendChild(timeSpent);
+    for (const name in nameSumMap) {
+    const { totalMinutes, maxMinutes } = nameSumMap[name];
 
-                trackedSitesTable.appendChild(tableRow);
-            }
-        }
+    // Create a new row for each tracked site
+    const newRow = newTable.insertRow();
+
+    // Add cells for name and total time
+    newRow.insertCell(0).textContent = name;
+    newRow.insertCell(1).textContent = totalMinutes.toFixed(2) + ' minutes';
+
+    // Add cell for setting max minutes
+    const setMaxMinutesCell = newRow.insertCell(2);
+    const maxMinutesInput = document.createElement('input');
+    maxMinutesInput.type = 'text';
+    maxMinutesInput.value = maxMinutes || '';
+    maxMinutesInput.placeholder = 'Minutes';
+    maxMinutesInput.addEventListener('change', (event) => {
+        const newValue = parseFloat(event.target.value) || 0;
+        nameSumMap[name].maxMinutes = newValue;
+        chrome.storage.local.set({ trackedSites }, () => {
+        displayTrackedTime(); // Update display after setting max minutes
+        });
     });
-}
 
+    setMaxMinutesCell.appendChild(maxMinutesInput);
+    }
+
+    // Replace the existing table with the new one
+    const trackedSitesTable = document.getElementById('tracked-sites');
+    trackedSitesTable.innerHTML = '';
+    trackedSitesTable.appendChild(newTable);
+});
+}  
 
 function resetTrackedTime() {
 chrome.storage.local.set({ trackedSites: {} }, () => {
@@ -50,6 +70,11 @@ chrome.storage.local.set({ trackedSites: {} }, () => {
     displayTrackedTime();
 });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    displayTrackedTime();
+    document.getElementById('reset-button').addEventListener('click', resetTrackedTime);
+  });
 
 // Add event listener for the reset button
 document.getElementById('reset-button').addEventListener('click', resetTrackedTime);
